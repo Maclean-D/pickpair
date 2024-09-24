@@ -91,11 +91,15 @@ export function PairTab({ cards, updateOverallWins, setActiveTab }: PairTabProps
       <h2 className="text-2xl font-bold">Pick Your Preference</h2>
       <div className={`grid ${isPortrait ? 'grid-rows-2 gap-4' : 'grid-cols-2 gap-8'}`}>
         {[card1, card2].map((card) => (
-          <Card key={card.id} className="cursor-pointer" onClick={() => handleChoice(card)}>
-            <CardContent className="flex items-center space-x-4 p-4">
-              {card.image && <img src={card.image} alt={card.title} className="w-24 h-24 object-cover rounded" />}
+          <Card key={card.id} className="cursor-pointer overflow-hidden" onClick={() => handleChoice(card)}>
+            {card.image && (
+              <div className="w-full aspect-video">
+                <img src={card.image} alt={card.title} className="w-full h-full object-contain" />
+              </div>
+            )}
+            <CardContent className="p-4">
               <div>
-                {card.title && <CardTitle>{card.title}</CardTitle>}
+                {card.title && <CardTitle className="mb-2">{card.title}</CardTitle>}
                 {card.description && <p>{card.description}</p>}
               </div>
             </CardContent>
