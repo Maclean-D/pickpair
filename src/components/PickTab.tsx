@@ -1,8 +1,7 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
 import { Card as CardType } from './types'
 import { ImagePlus, X } from "lucide-react"
 
@@ -15,10 +14,28 @@ type PickTabProps = {
 
 export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps) {
   const [newCard, setNewCard] = useState<Omit<CardType, 'id'>>({ title: '', description: '', image: '' })
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleAddCard = () => {
     addCard(newCard)
     setNewCard({ title: '', description: '', image: '' })
+  }
+
+  const handleImageUpload = (id: string) => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+      fileInputRef.current.onchange = (event) => {
+        const file = (event.target as HTMLInputElement).files?.[0]
+        if (file) {
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            const imageDataUrl = e.target?.result as string
+            updateCard(id, "image", imageDataUrl)
+          }
+          reader.readAsDataURL(file)
+        }
+      }
+    }
   }
 
   return (
@@ -39,7 +56,12 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
                 <X className="h-4 w-4" />
               </Button>
               <CardContent className="flex space-x-4 pt-6">
-                <Button variant="outline" size="icon" className="w-24 h-24 flex-shrink-0">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="w-24 h-24 flex-shrink-0"
+                  onClick={() => handleImageUpload(card.id)}
+                >
                   {card.image ? (
                     <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
                   ) : (
@@ -52,15 +74,10 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
                     value={card.title}
                     onChange={(e) => updateCard(card.id, "title", e.target.value)}
                   />
-                  <Textarea
+                  <Input
                     placeholder="Description"
                     value={card.description}
                     onChange={(e) => updateCard(card.id, "description", e.target.value)}
-                  />
-                  <Input
-                    placeholder="Image URL"
-                    value={card.image}
-                    onChange={(e) => updateCard(card.id, "image", e.target.value)}
                   />
                 </div>
               </CardContent>
@@ -68,6 +85,12 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
           ))}
           <Button onClick={handleAddCard} className="w-full">Add Card</Button>
         </div>
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+          accept="image/*"
+        />
       </CardContent>
     </Card>
   )
