@@ -11,6 +11,7 @@ export default function PickPair() {
   const [cards, setCards] = useState<Card[]>([])
   const [activeTab, setActiveTab] = useState("pick")
   const [overallWins, setOverallWins] = useState<Record<string, number>>({})
+  const [individualPicks, setIndividualPicks] = useState<Record<string, string[]>>({})
 
   const addCard = (card: Omit<Card, 'id'>) => {
     setCards([...cards, { ...card, id: Date.now().toString() }])
@@ -28,6 +29,13 @@ export default function PickPair() {
     setOverallWins(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }))
   }
 
+  const addIndividualPick = (name: string, cardTitle: string) => {
+    setIndividualPicks(prev => ({
+      ...prev,
+      [name]: [...(prev[name] || []), cardTitle]
+    }))
+  }
+
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
       <div className="flex space-x-2 mb-4">
@@ -43,8 +51,8 @@ export default function PickPair() {
         ))}
       </div>
       {activeTab === "pick" && <PickTab cards={cards} addCard={addCard} updateCard={updateCard} removeCard={removeCard} />}
-      {activeTab === "pair" && <PairTab cards={cards} updateOverallWins={updateOverallWins} setActiveTab={setActiveTab} />}
-      {activeTab === "results" && <ResultsTab cards={cards} overallWins={overallWins} />}
+      {activeTab === "pair" && <PairTab cards={cards} updateOverallWins={updateOverallWins} setActiveTab={setActiveTab} addIndividualPick={addIndividualPick} />}
+      {activeTab === "results" && <ResultsTab cards={cards} overallWins={overallWins} individualPicks={individualPicks} />}
     </div>
   )
 }

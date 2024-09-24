@@ -10,9 +10,10 @@ type PairTabProps = {
   cards: CardType[]
   updateOverallWins: (id: string) => void
   setActiveTab: (tab: string) => void
+  addIndividualPick: (name: string, cardTitle: string) => void
 }
 
-export function PairTab({ cards, updateOverallWins, setActiveTab }: PairTabProps) {
+export function PairTab({ cards, updateOverallWins, setActiveTab, addIndividualPick }: PairTabProps) {
   const [name, setName] = useState('')
   const [nameSubmitted, setNameSubmitted] = useState(false)
   const [pairIndex, setPairIndex] = useState(0)
@@ -32,9 +33,11 @@ export function PairTab({ cards, updateOverallWins, setActiveTab }: PairTabProps
     if (pairIndex + 2 >= shuffledCards.length) {
       setWinner(chosenCard)
       updateOverallWins(chosenCard.id)
+      addIndividualPick(name, chosenCard.title || 'Untitled')
       setActiveTab("results")
     } else {
       setPairIndex(pairIndex + 1)
+      addIndividualPick(name, chosenCard.title || 'Untitled')
     }
   }
 
