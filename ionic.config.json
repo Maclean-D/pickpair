@@ -1,0 +1,7 @@
+{
+  "name": "pickpair",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}
