@@ -3,13 +3,15 @@
 ## Features
 
 ### Options
-![pick](https://github.com/Maclean-D/pickpair/raw/main/pick.png)
+![pick](https://github.com/Maclean-D/pickpair/pickpair/raw/master/pick.png)
 
 - Title
 - Description
 - Image
 
 ### Pair
+![pair](https://github.com/Maclean-D/pickpair/pickpair/raw/master/pair.png)
+
 - Record Name
 - Pick between two options at a time in random order until overall winner
 
