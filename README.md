@@ -3,6 +3,8 @@
 ## Features
 
 ### Options
+![pick](https://github.com/Maclean-D/pickpair/raw/main/pick.png)
+
 - Title
 - Description
 - Image
