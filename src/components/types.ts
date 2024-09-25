@@ -1,6 +1,7 @@
-export type Card = {
-  id: string
-  image?: string
-  title?: string
-  description?: string
+export interface Card {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  elo: number; // Add this line
 }

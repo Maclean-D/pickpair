@@ -7,13 +7,13 @@ import { ImagePlus, X } from "lucide-react"
 
 type PickTabProps = {
   cards: CardType[]
-  addCard: (card: Omit<CardType, 'id'>) => void
+  addCard: (card: Omit<CardType, 'id' | 'elo'>) => void
   updateCard: (id: string, field: keyof CardType, value: string) => void
   removeCard: (id: string) => void
 }
 
 export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps) {
-  const [newCard, setNewCard] = useState<Omit<CardType, 'id'>>({ title: '', description: '', image: '' })
+  const [newCard, setNewCard] = useState<Omit<CardType, 'id' | 'elo'>>({ title: '', description: '', image: '' })
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleAddCard = () => {
