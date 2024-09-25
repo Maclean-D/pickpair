@@ -41,7 +41,7 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Pick</CardTitle>
+        <CardTitle>Options</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -83,7 +83,7 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
               </CardContent>
             </Card>
           ))}
-          <Button onClick={handleAddCard} className="w-full">Add Card</Button>
+          <Button onClick={handleAddCard} className="w-full">Add Option</Button>
         </div>
         <input
           type="file"

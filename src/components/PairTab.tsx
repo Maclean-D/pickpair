@@ -30,14 +30,19 @@ export function PairTab({ cards, updateOverallWins, setActiveTab, addIndividualP
   }, [cards])
 
   const handleChoice = (chosenCard: CardType) => {
+    addIndividualPick(name, chosenCard.title || 'Untitled')
+
     if (pairIndex + 2 >= shuffledCards.length) {
       setWinner(chosenCard)
       updateOverallWins(chosenCard.id)
-      addIndividualPick(name, chosenCard.title || 'Untitled')
       setActiveTab("results")
     } else {
-      setPairIndex(pairIndex + 1)
-      addIndividualPick(name, chosenCard.title || 'Untitled')
+      // Keep the chosen card and pair it with the next one
+      setShuffledCards(prevCards => [
+        chosenCard,
+        ...prevCards.slice(pairIndex + 2)
+      ])
+      setPairIndex(0)
     }
   }
 
