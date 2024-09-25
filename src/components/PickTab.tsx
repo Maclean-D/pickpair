@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card as CardType } from './types'
 import { ImagePlus, X } from "lucide-react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 type PickTabProps = {
   cards: CardType[]
@@ -15,7 +14,6 @@ type PickTabProps = {
 
 export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps) {
   const [newCard, setNewCard] = useState<Omit<CardType, 'id'>>({ title: '', description: '', image: '' })
-  const [selectionMode, setSelectionMode] = useState<string>("winner")
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleAddCard = () => {
@@ -42,17 +40,8 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader>
         <CardTitle>Options</CardTitle>
-        <Select value={selectionMode} onValueChange={setSelectionMode}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Selection mode" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="winner">Winner (Fastest)</SelectItem>
-            <SelectItem value="rank">Rank (Slowest)</SelectItem>
-          </SelectContent>
-        </Select>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
