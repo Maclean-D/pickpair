@@ -5,7 +5,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card as CardType } from './types'
-import { Play } from "lucide-react"
+import { Play, SkipForward } from "lucide-react"
 
 type PairTabProps = {
   cards: CardType[]
@@ -67,13 +67,16 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
     }
   }, [comparisonIndex, comparisons]);
 
-  const handleChoice = (chosenCard: CardType) => {
+  const handleChoice = (chosenCard: CardType | null) => {
     if (!currentPair) return;
-    const [card1, card2] = currentPair;
-    const otherCard = chosenCard.id === card1.id ? card2 : card1;
+    
+    if (chosenCard) {
+      const [card1, card2] = currentPair;
+      const otherCard = chosenCard.id === card1.id ? card2 : card1;
 
-    addIndividualPick(name, chosenCard.title || 'Untitled');
-    updateElo(chosenCard.id, otherCard.id);
+      addIndividualPick(name, chosenCard.title || 'Untitled');
+      updateElo(chosenCard.id, otherCard.id);
+    }
     
     if (comparisonIndex + 1 >= comparisons.length) {
       setActiveTab("results");
@@ -119,7 +122,15 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]"> {/* Adjust for approximate header height */}
-      <h2 className="text-2xl font-bold mb-4">Pick Your Preference ({comparisonIndex + 1}/{comparisons.length})</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">
+          Pick Your Preference {name} ({comparisonIndex + 1}/{comparisons.length})
+        </h2>
+        <Button variant="outline" onClick={() => handleChoice(null)}>
+          <SkipForward className="h-4 w-4 mr-2" />
+          Skip
+        </Button>
+      </div>
       <div className={`flex-grow flex ${isPortrait ? 'flex-col' : 'flex-row'} gap-4 overflow-hidden`}>
         {[card1, card2].map((card) => (
           <Card 
