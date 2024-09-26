@@ -26,9 +26,15 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
     return cards.filter(card => card.title.toLowerCase() !== name.toLowerCase());
   }, [cards, name]);
 
+  // Calculate the number of comparisons based on the number of cards
+  const calculateComparisons = (cardCount: number) => {
+    return cardCount * 3; // 3 times the number of cards
+  };
+
   useEffect(() => {
     if (!nameSubmitted) return;
 
+    const totalComparisons = calculateComparisons(filteredCards.length);
     const allPairs: [CardType, CardType][] = [];
     
     for (let i = 0; i < filteredCards.length; i++) {
@@ -37,7 +43,13 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
       }
     }
 
-    setComparisons(shuffleArray(allPairs));
+    // Repeat and shuffle to get desired number of comparisons
+    const repeatedPairs = Array(Math.ceil(totalComparisons / allPairs.length))
+      .fill(allPairs)
+      .flat()
+      .slice(0, totalComparisons);
+
+    setComparisons(shuffleArray(repeatedPairs));
     setComparisonIndex(0);
 
     const checkOrientation = () => setIsPortrait(window.innerHeight > window.innerWidth);
