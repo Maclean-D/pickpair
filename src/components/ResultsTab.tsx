@@ -6,14 +6,16 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { Card as CardType } from './types'
 import { useMemo, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
 
 type ResultsTabProps = {
   cards: CardType[]
   individualPicks: Record<string, string[]>
   eloHistory: Record<string, Record<string, number[]>>
+  resetResults: () => void  // Add this new prop
 }
 
-export function ResultsTab({ cards, individualPicks, eloHistory }: ResultsTabProps) {
+export function ResultsTab({ cards, individualPicks, eloHistory, resetResults }: ResultsTabProps) {
   const [selectedUser, setSelectedUser] = useState<string>("average");
 
   const initialElo = useMemo(() => {
@@ -153,6 +155,21 @@ export function ResultsTab({ cards, individualPicks, eloHistory }: ResultsTabPro
               </li>
             ))}
           </ul>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Reset Results</CardTitle>
+          <CardDescription>Clear all rankings, users, and Elo ratings while keeping the cards</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button 
+            variant="destructive" 
+            onClick={resetResults}
+          >
+            Reset All Results
+          </Button>
         </CardContent>
       </Card>
     </div>

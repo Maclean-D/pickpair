@@ -87,6 +87,22 @@ export default function PickPair() {
     }))
   }
 
+  const resetResults = () => {
+    setIndividualPicks({});
+    setEloHistory({});
+    setCurrentUser(null);
+    
+    // Reset Elo history for existing cards
+    const resetHistory: Record<string, Record<string, number[]>> = {};
+    cards.forEach(card => {
+      resetHistory[card.id] = {};
+    });
+    setEloHistory(resetHistory);
+
+    // Switch back to the "pick" tab
+    setActiveTab("pick");
+  }
+
   return (
     <div className="w-full p-4">
       <div className="flex space-x-2 mb-4">
@@ -103,7 +119,14 @@ export default function PickPair() {
       </div>
       {activeTab === "pick" && <PickTab cards={cards} addCard={addCard} updateCard={updateCard} removeCard={removeCard} />}
       {activeTab === "pair" && <PairTab cards={cards} updateElo={updateElo} setActiveTab={setActiveTab} addIndividualPick={addIndividualPick} setCurrentUser={setCurrentUser} />}
-      {activeTab === "results" && <ResultsTab cards={cards} individualPicks={individualPicks} eloHistory={eloHistory} />}
+      {activeTab === "results" && (
+        <ResultsTab 
+          cards={cards} 
+          individualPicks={individualPicks} 
+          eloHistory={eloHistory} 
+          resetResults={resetResults}  // Pass the new function
+        />
+      )}
     </div>
   )
 }
