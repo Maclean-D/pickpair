@@ -7,16 +7,31 @@ import { Card as CardType } from './types'
 import { useMemo, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
+import { Trash2, Download, Upload } from "lucide-react"
+import { Input } from "@/components/ui/input"
 
 type ResultsTabProps = {
   cards: CardType[]
   individualPicks: Record<string, string[]>
   eloHistory: Record<string, Record<string, number[]>>
-  resetResults: () => void  // Add this new prop
+  resetResults: () => void
+  // Add these new props
+  deleteUser: (userName: string) => void
+  updateEloHistory: (newEloHistory: Record<string, Record<string, number[]>>) => void
+  updateIndividualPicks: (newIndividualPicks: Record<string, string[]>) => void
 }
 
-export function ResultsTab({ cards, individualPicks, eloHistory, resetResults }: ResultsTabProps) {
+export function ResultsTab({ 
+  cards, 
+  individualPicks, 
+  eloHistory, 
+  resetResults, 
+  deleteUser, 
+  updateEloHistory,
+  updateIndividualPicks
+}: ResultsTabProps) {
   const [selectedUser, setSelectedUser] = useState<string>("average");
+  const [newUserName, setNewUserName] = useState<string>("");
 
   const initialElo = useMemo(() => {
     return Math.max(400, Math.round(1000 / Math.sqrt(cards.length || 1)));
@@ -70,6 +85,65 @@ export function ResultsTab({ cards, individualPicks, eloHistory, resetResults }:
   }
 
   const userOptions = ["average", ...Object.keys(individualPicks)];
+
+  const handleDeleteUser = (userName: string) => {
+    if (window.confirm(`Are you sure you want to delete ${userName}'s data?`)) {
+      deleteUser(userName);
+      if (selectedUser === userName) {
+        setSelectedUser("average");
+      }
+    }
+  };
+
+  const handleExportUser = (userName: string) => {
+    const userEloData = Object.fromEntries(
+      Object.entries(eloHistory).map(([cardId, userElos]) => [cardId, userElos[userName] || []])
+    );
+    const blob = new Blob([JSON.stringify(userEloData)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${userName}_elo_data.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportUser = (userName: string) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const importedData = JSON.parse(event.target?.result as string);
+            const newEloHistory = { ...eloHistory };
+            Object.entries(importedData).forEach(([cardId, eloArray]) => {
+              if (!newEloHistory[cardId]) {
+                newEloHistory[cardId] = {};
+              }
+              newEloHistory[cardId][userName] = eloArray as number[];
+            });
+            updateEloHistory(newEloHistory);
+
+            // Update individualPicks for the new user
+            const newIndividualPicks = { ...individualPicks, [userName]: [] };
+            updateIndividualPicks(newIndividualPicks);
+
+            setSelectedUser(userName);
+            setNewUserName("");
+          } catch (error) {
+            console.error('Error importing data:', error);
+            alert('Error importing data. Please check the file format.');
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
 
   return (
     <div className="space-y-8">
@@ -144,7 +218,7 @@ export function ResultsTab({ cards, individualPicks, eloHistory, resetResults }:
       <Card>
         <CardHeader>
           <CardTitle>Individual Highest Rated Picks</CardTitle>
-          <CardDescription>Each user&apos;s highest rated item based on Elo</CardDescription>
+          <CardDescription>Each user's highest rated item based on Elo</CardDescription>
         </CardHeader>
         <CardContent>
           <ul className="space-y-2">
@@ -152,9 +226,54 @@ export function ResultsTab({ cards, individualPicks, eloHistory, resetResults }:
               <li key={name} className="flex justify-between items-center">
                 <span className="font-medium">{name}</span>
                 <span>{getHighestEloItem(name)}</span>
+                <div className="space-x-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handleExportUser(name)}
+                    title="Export user data"
+                  >
+                    <Download className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handleDeleteUser(name)}
+                    title="Delete user"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </li>
             ))}
           </ul>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Import New User Data</CardTitle>
+          <CardDescription>Import Elo ratings for a new user</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center space-x-2">
+            <Input
+              placeholder="New user name"
+              value={newUserName}
+              onChange={(e) => setNewUserName(e.target.value)}
+            />
+            <Button
+              onClick={() => {
+                if (newUserName.trim()) {
+                  handleImportUser(newUserName.trim());
+                } else {
+                  alert("Please enter a valid user name");
+                }
+              }}
+            >
+              Import User Data
+            </Button>
+          </div>
         </CardContent>
       </Card>
 

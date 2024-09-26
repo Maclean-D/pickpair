@@ -103,6 +103,30 @@ export default function PickPair() {
     setActiveTab("pick");
   }
 
+  const deleteUser = (userName: string) => {
+    setIndividualPicks(prev => {
+      const newPicks = { ...prev };
+      delete newPicks[userName];
+      return newPicks;
+    });
+
+    setEloHistory(prev => {
+      const newHistory = { ...prev };
+      Object.keys(newHistory).forEach(cardId => {
+        delete newHistory[cardId][userName];
+      });
+      return newHistory;
+    });
+  }
+
+  const updateEloHistory = (newEloHistory: Record<string, Record<string, number[]>>) => {
+    setEloHistory(newEloHistory);
+  }
+
+  const updateIndividualPicks = (newIndividualPicks: Record<string, string[]>) => {
+    setIndividualPicks(newIndividualPicks);
+  }
+
   return (
     <div className="w-full p-4">
       <div className="flex space-x-2 mb-4">
@@ -124,7 +148,10 @@ export default function PickPair() {
           cards={cards} 
           individualPicks={individualPicks} 
           eloHistory={eloHistory} 
-          resetResults={resetResults}  // Pass the new function
+          resetResults={resetResults}
+          deleteUser={deleteUser}
+          updateEloHistory={updateEloHistory}
+          updateIndividualPicks={updateIndividualPicks}
         />
       )}
     </div>
