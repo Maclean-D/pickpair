@@ -108,20 +108,28 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
   const [card1, card2] = currentPair;
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Pick Your Preference ({comparisonIndex + 1}/{comparisons.length})</h2>
-      <div className={`grid ${isPortrait ? 'grid-rows-2 gap-4' : 'grid-cols-2 gap-16'}`}>
+    <div className="flex flex-col h-[calc(100vh-8rem)]"> {/* Adjust for approximate header height */}
+      <h2 className="text-2xl font-bold mb-4">Pick Your Preference ({comparisonIndex + 1}/{comparisons.length})</h2>
+      <div className={`flex-grow flex ${isPortrait ? 'flex-col' : 'flex-row'} gap-4 overflow-hidden`}>
         {[card1, card2].map((card) => (
-          <Card key={card.id} className="cursor-pointer overflow-hidden max-w-2xl mx-auto w-full" onClick={() => handleChoice(card)}>
+          <Card 
+            key={card.id} 
+            className="cursor-pointer overflow-hidden flex-1 flex flex-col" 
+            onClick={() => handleChoice(card)}
+          >
             {card.image && (
-              <div className="w-full aspect-video">
-                <img src={card.image} alt={card.title} className="w-full h-full object-contain" />
+              <div className="flex-grow relative">
+                <img 
+                  src={card.image} 
+                  alt={card.title} 
+                  className="absolute inset-0 w-full h-full object-contain"
+                />
               </div>
             )}
-            <CardContent className="p-6">
-              <div>
-                {card.title && <CardTitle className="mb-4 text-2xl">{card.title}</CardTitle>}
-                {card.description && <p className="text-lg">{card.description}</p>}
+            <CardContent className="p-4 flex-shrink-0">
+              <div className="overflow-y-auto max-h-32"> {/* Allow scrolling for long content */}
+                {card.title && <CardTitle className="mb-2 text-xl">{card.title}</CardTitle>}
+                {card.description && <p className="text-base">{card.description}</p>}
               </div>
             </CardContent>
           </Card>
