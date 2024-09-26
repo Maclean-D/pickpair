@@ -88,7 +88,7 @@ export default function PickPair() {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4">
+    <div className="w-full p-4">
       <div className="flex space-x-2 mb-4">
         {["pick", "pair", "results"].map((tab) => (
           <Button

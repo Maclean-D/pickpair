@@ -3,7 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card as CardType } from './types'
-import { ImagePlus, X } from "lucide-react"
+import { ImagePlus, X, Download, Upload } from "lucide-react"
+import JSZip from 'jszip'
+import { saveAs } from 'file-saver'
 
 type PickTabProps = {
   cards: CardType[]
@@ -15,6 +17,7 @@ type PickTabProps = {
 export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps) {
   const [newCard, setNewCard] = useState<Omit<CardType, 'id' | 'elo'>>({ title: '', description: '', image: '' })
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const importInputRef = useRef<HTMLInputElement>(null)
 
   const handleAddCard = () => {
     addCard(newCard)
@@ -37,6 +40,67 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
       }
     }
   }
+
+  const handleExport = async () => {
+    const zip = new JSZip();
+    
+    cards.forEach((card, index) => {
+      const cardData = {
+        title: card.title,
+        description: card.description,
+        image: card.image
+      };
+      zip.file(`card_${index}.json`, JSON.stringify(cardData));
+      
+      if (card.image && card.image.startsWith('data:image')) {
+        const imageData = atob(card.image.split(',')[1]);
+        const arrayBuffer = new ArrayBuffer(imageData.length);
+        const uintArray = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < imageData.length; i++) {
+          uintArray[i] = imageData.charCodeAt(i);
+        }
+        zip.file(`image_${index}.png`, arrayBuffer, {base64: true});
+      }
+    });
+    
+    const content = await zip.generateAsync({type: "blob"});
+    saveAs(content, "cards_export.zip");
+  };
+
+  const handleImport = async (file: File) => {
+    try {
+      const content = await file.arrayBuffer();
+      const zip = await JSZip.loadAsync(content);
+      const importedCards: Omit<CardType, 'id' | 'elo'>[] = [];
+
+      const cardFiles = Object.keys(zip.files).filter(name => name.endsWith('.json'));
+      
+      for (const cardFile of cardFiles) {
+        const cardData = JSON.parse(await zip.files[cardFile].async('text'));
+        const cardIndex = cardFile.match(/card_(\d+)\.json/)?.[1];
+        
+        if (cardIndex) {
+          const imageFile = Object.keys(zip.files).find(name => name.endsWith(`image_${cardIndex}.png`));
+          if (imageFile && zip.files[imageFile]) {
+            const imageBlob = await zip.files[imageFile].async('blob');
+            cardData.image = await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result as string);
+              reader.readAsDataURL(imageBlob);
+            });
+          }
+        }
+        
+        importedCards.push(cardData);
+      }
+
+      // Add imported cards
+      importedCards.forEach(card => addCard(card));
+      console.log(`Imported ${importedCards.length} cards`);
+    } catch (error) {
+      console.error('Error importing cards:', error);
+    }
+  };
 
   return (
     <Card>
@@ -83,13 +147,42 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
               </CardContent>
             </Card>
           ))}
-          <Button onClick={handleAddCard} className="w-full">Add Option</Button>
+          <div className="flex space-x-2">
+            <Button onClick={handleAddCard} className="flex-1">Add Option</Button>
+            <Button onClick={handleExport} className="flex-grow-0">
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            <Button onClick={() => importInputRef.current?.click()} className="flex-grow-0">
+              <Upload className="h-4 w-4 mr-2" />
+              Import
+            </Button>
+          </div>
         </div>
+        <input
+          type="file"
+          ref={importInputRef}
+          style={{ display: 'none' }}
+          accept=".zip"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              handleImport(file);
+            }
+          }}
+        />
         <input
           type="file"
           ref={fileInputRef}
           style={{ display: 'none' }}
           accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              // Existing image upload logic
+              // This should be handled by the handleImageUpload function
+            }
+          }}
         />
       </CardContent>
     </Card>

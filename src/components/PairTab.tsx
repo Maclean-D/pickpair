@@ -26,11 +26,6 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
     return cards.filter(card => card.title.toLowerCase() !== name.toLowerCase());
   }, [cards, name]);
 
-  // Remove the unused initialElo calculation
-  // const initialElo = useMemo(() => {
-  //   return Math.max(400, Math.round(1000 / Math.sqrt(cards.length || 1)));
-  // }, [cards.length]);
-
   // Calculate the number of comparisons based on the number of cards
   const calculateComparisons = (cardCount: number) => {
     return cardCount * 3; // 3 times the number of cards
@@ -115,18 +110,18 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Pick Your Preference ({comparisonIndex + 1}/{comparisons.length})</h2>
-      <div className={`grid ${isPortrait ? 'grid-rows-2 gap-4' : 'grid-cols-2 gap-8'}`}>
+      <div className={`grid ${isPortrait ? 'grid-rows-2 gap-4' : 'grid-cols-2 gap-16'}`}>
         {[card1, card2].map((card) => (
-          <Card key={card.id} className="cursor-pointer overflow-hidden" onClick={() => handleChoice(card)}>
+          <Card key={card.id} className="cursor-pointer overflow-hidden max-w-2xl mx-auto w-full" onClick={() => handleChoice(card)}>
             {card.image && (
               <div className="w-full aspect-video">
                 <img src={card.image} alt={card.title} className="w-full h-full object-contain" />
               </div>
             )}
-            <CardContent className="p-4">
+            <CardContent className="p-6">
               <div>
-                {card.title && <CardTitle className="mb-2">{card.title}</CardTitle>}
-                {card.description && <p>{card.description}</p>}
+                {card.title && <CardTitle className="mb-4 text-2xl">{card.title}</CardTitle>}
+                {card.description && <p className="text-lg">{card.description}</p>}
               </div>
             </CardContent>
           </Card>

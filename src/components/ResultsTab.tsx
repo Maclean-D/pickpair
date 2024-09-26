@@ -24,6 +24,21 @@ export function ResultsTab({ cards, individualPicks, eloHistory }: ResultsTabPro
     return sum / userElos.length;
   };
 
+  const getHighestEloItem = (userName: string): string => {
+    let highestElo = -Infinity;
+    let highestEloItem = "No pick";
+
+    Object.entries(eloHistory).forEach(([cardId, userElos]) => {
+      const userElo = userElos[userName]?.at(-1) ?? initialElo;
+      if (userElo > highestElo) {
+        highestElo = userElo;
+        highestEloItem = cards.find(card => card.id === cardId)?.title ?? "Unknown";
+      }
+    });
+
+    return highestEloItem;
+  };
+
   const sortedCards = [...cards].sort((a, b) => calculateAverageElo(b.id) - calculateAverageElo(a.id));
 
   const chartData = sortedCards.map(card => ({
@@ -39,11 +54,6 @@ export function ResultsTab({ cards, individualPicks, eloHistory }: ResultsTabPro
     label: {
       color: "hsl(var(--background))",
     },
-  }
-
-  const getOverallPick = (picks: string[]): string => {
-    if (picks.length === 0) return "No pick";
-    return picks[picks.length - 1];
   }
 
   return (
@@ -100,15 +110,15 @@ export function ResultsTab({ cards, individualPicks, eloHistory }: ResultsTabPro
 
       <Card>
         <CardHeader>
-          <CardTitle>Individual Picks</CardTitle>
-          <CardDescription>What individual people picked</CardDescription>
+          <CardTitle>Individual Highest Rated Picks</CardTitle>
+          <CardDescription>Each user&apos;s highest rated item based on Elo</CardDescription>
         </CardHeader>
         <CardContent>
           <ul className="space-y-2">
-            {Object.entries(individualPicks).map(([name, picks]) => (
+            {Object.keys(individualPicks).map((name) => (
               <li key={name} className="flex justify-between items-center">
                 <span className="font-medium">{name}</span>
-                <span>{getOverallPick(picks)}</span>
+                <span>{getHighestEloItem(name)}</span>
               </li>
             ))}
           </ul>
