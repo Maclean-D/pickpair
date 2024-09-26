@@ -5,6 +5,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card as CardType } from './types'
+import { Play } from "lucide-react"
 
 type PairTabProps = {
   cards: CardType[]
@@ -93,12 +94,21 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
     return (
       <form onSubmit={handleNameSubmit} className="space-y-4">
         <h2 className="text-2xl font-bold">Enter Your Name</h2>
-        <Input
-          placeholder="Your Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <Button type="submit">Start</Button>
+        <p className="text-sm text-muted-foreground mb-4">
+          This helps prevent voting for yourself and allows for personalized results.
+        </p>
+        <div className="flex space-x-2">
+          <Input
+            placeholder="Your Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="flex-grow"
+          />
+          <Button type="submit">
+            <Play className="h-4 w-4 mr-2" />
+            Start
+          </Button>
+        </div>
       </form>
     );
   }

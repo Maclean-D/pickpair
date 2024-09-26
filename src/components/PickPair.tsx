@@ -6,6 +6,7 @@ import { PickTab } from './PickTab'
 import { PairTab } from './PairTab'
 import { ResultsTab } from './ResultsTab'
 import { Card } from './types'
+import { List, Users, BarChart2 } from "lucide-react"
 
 const K_FACTOR = 32;
 
@@ -130,14 +131,19 @@ export default function PickPair() {
   return (
     <div className="w-full p-4">
       <div className="flex space-x-2 mb-4">
-        {["pick", "pair", "results"].map((tab) => (
+        {[
+          { name: "pick", icon: <List className="h-4 w-4 mr-2" /> },
+          { name: "pair", icon: <Users className="h-4 w-4 mr-2" /> },
+          { name: "results", icon: <BarChart2 className="h-4 w-4 mr-2" /> }
+        ].map((tab) => (
           <Button
-            key={tab}
-            variant={activeTab === tab ? "default" : "outline"}
+            key={tab.name}
+            variant={activeTab === tab.name ? "default" : "outline"}
             className="flex-1 text-lg py-6"
-            onClick={() => setActiveTab(tab)}
+            onClick={() => setActiveTab(tab.name)}
           >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            {tab.icon}
+            {tab.name.charAt(0).toUpperCase() + tab.name.slice(1)}
           </Button>
         ))}
       </div>

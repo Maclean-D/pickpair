@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card as CardType } from './types'
-import { ImagePlus, X, Download, Upload } from "lucide-react"
+import { ImagePlus, X, Download, Upload, Plus } from "lucide-react"
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 
@@ -148,15 +148,20 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
             </Card>
           ))}
           <div className="flex space-x-2">
-            <Button onClick={handleAddCard} className="flex-1">Add Option</Button>
+            <Button onClick={handleAddCard} className="flex-1">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Option
+            </Button>
             <Button onClick={handleExport} className="flex-grow-0">
               <Download className="h-4 w-4 mr-2" />
-              Export
+              Export All Cards
             </Button>
+            {/* Commented out import button
             <Button onClick={() => importInputRef.current?.click()} className="flex-grow-0">
               <Upload className="h-4 w-4 mr-2" />
               Import
             </Button>
+            */}
           </div>
         </div>
         <input
