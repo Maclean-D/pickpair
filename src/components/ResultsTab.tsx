@@ -9,6 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button"
 import { Trash2, Download, Upload, RefreshCw } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 type ResultsTabProps = {
   cards: CardType[]
@@ -65,6 +73,21 @@ export function ResultsTab({
     });
 
     return highestEloItem;
+  };
+
+  const getLowestEloItem = (userName: string): string => {
+    let lowestElo = Infinity;
+    let lowestEloItem = "No pick";
+
+    Object.entries(eloHistory).forEach(([cardId, userElos]) => {
+      const userElo = userElos[userName]?.at(-1) ?? initialElo;
+      if (userElo < lowestElo) {
+        lowestElo = userElo;
+        lowestEloItem = cards.find(card => card.id === cardId)?.title ?? "Unknown";
+      }
+    });
+
+    return lowestEloItem;
   };
 
   const sortedCards = [...cards].sort((a, b) => calculateElo(b.id, selectedUser) - calculateElo(a.id, selectedUser));
@@ -223,36 +246,48 @@ export function ResultsTab({
 
       <Card>
         <CardHeader>
-          <CardTitle>Individual Highest Rated Picks</CardTitle>
-          <CardDescription>Each user's highest rated item based on Elo</CardDescription>
+          <CardTitle>User's Picks</CardTitle>
+          <CardDescription>Each user's highest and lowest rated items based on Elo</CardDescription>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2">
-            {Object.keys(individualPicks).map((name) => (
-              <li key={name} className="flex justify-between items-center">
-                <span className="font-medium">{name}</span>
-                <span>{getHighestEloItem(name)}</span>
-                <div className="space-x-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleExportUser(name)}
-                    title="Export user data"
-                  >
-                    <Download className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleDeleteUser(name)}
-                    title="Delete user"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>User</TableHead>
+                <TableHead>Highest Rated Pick</TableHead>
+                <TableHead>Lowest Rated Pick</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Object.keys(individualPicks).map((name) => (
+                <TableRow key={name}>
+                  <TableCell className="font-medium">{name}</TableCell>
+                  <TableCell>{getHighestEloItem(name)}</TableCell>
+                  <TableCell>{getLowestEloItem(name)}</TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleExportUser(name)}
+                      title="Export user data"
+                      className="mr-2"
+                    >
+                      <Download className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleDeleteUser(name)}
+                      title="Delete user"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
 
