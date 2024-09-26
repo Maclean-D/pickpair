@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Card as CardType } from './types'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 type ResultsTabProps = {
   cards: CardType[]
@@ -13,6 +14,8 @@ type ResultsTabProps = {
 }
 
 export function ResultsTab({ cards, individualPicks, eloHistory }: ResultsTabProps) {
+  const [selectedUser, setSelectedUser] = useState<string>("average");
+
   const initialElo = useMemo(() => {
     return Math.max(400, Math.round(1000 / Math.sqrt(cards.length || 1)));
   }, [cards.length]);
@@ -22,6 +25,14 @@ export function ResultsTab({ cards, individualPicks, eloHistory }: ResultsTabPro
     if (userElos.length === 0) return initialElo; // Use initialElo instead of hardcoded 400
     const sum = userElos.reduce((acc, elos) => acc + (elos.at(-1) ?? initialElo), 0);
     return sum / userElos.length;
+  };
+
+  const calculateElo = (cardId: string, user: string) => {
+    if (user === "average") {
+      return calculateAverageElo(cardId);
+    }
+    const userElos = eloHistory[cardId][user];
+    return userElos?.at(-1) ?? initialElo;
   };
 
   const getHighestEloItem = (userName: string): string => {
@@ -39,11 +50,11 @@ export function ResultsTab({ cards, individualPicks, eloHistory }: ResultsTabPro
     return highestEloItem;
   };
 
-  const sortedCards = [...cards].sort((a, b) => calculateAverageElo(b.id) - calculateAverageElo(a.id));
+  const sortedCards = [...cards].sort((a, b) => calculateElo(b.id, selectedUser) - calculateElo(a.id, selectedUser));
 
   const chartData = sortedCards.map(card => ({
     title: card.title,
-    elo: Math.round(calculateAverageElo(card.id))
+    elo: Math.round(calculateElo(card.id, selectedUser))
   }));
 
   const chartConfig = {
@@ -56,12 +67,32 @@ export function ResultsTab({ cards, individualPicks, eloHistory }: ResultsTabPro
     },
   }
 
+  const userOptions = ["average", ...Object.keys(individualPicks)];
+
   return (
     <div className="space-y-8">
       <Card>
-        <CardHeader>
-          <CardTitle>Average Elo Ratings</CardTitle>
-          <CardDescription>Average Elo rating for each option across all users</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Elo Ratings</CardTitle>
+            <CardDescription>
+              {selectedUser === "average" 
+                ? "Average Elo rating for each option across all users" 
+                : `Elo ratings for ${selectedUser}`}
+            </CardDescription>
+          </div>
+          <Select value={selectedUser} onValueChange={setSelectedUser}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Select user" />
+            </SelectTrigger>
+            <SelectContent>
+              {userOptions.map(user => (
+                <SelectItem key={user} value={user}>
+                  {user === "average" ? "Average of all users" : user}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig}>
