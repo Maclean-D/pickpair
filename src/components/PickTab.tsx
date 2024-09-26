@@ -104,8 +104,12 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Options</CardTitle>
+        <Button onClick={handleExport} className="flex-shrink-0">
+          <Download className="h-4 w-4 mr-2" />
+          Export All Cards
+        </Button>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -114,12 +118,12 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute top-2 right-2"
+                className="absolute top-1/2 right-2 -translate-y-1/2 z-10"
                 onClick={() => removeCard(card.id)}
               >
                 <X className="h-4 w-4" />
               </Button>
-              <CardContent className="flex space-x-4 pt-6">
+              <CardContent className="flex space-x-4 py-4">
                 <Button
                   variant="outline"
                   size="icon"
@@ -132,37 +136,27 @@ export function PickTab({ cards, addCard, updateCard, removeCard }: PickTabProps
                     <ImagePlus className="h-8 w-8" />
                   )}
                 </Button>
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 space-y-2 pr-10"> {/* Increased right padding */}
                   <Input
                     placeholder="Title"
                     value={card.title}
                     onChange={(e) => updateCard(card.id, "title", e.target.value)}
+                    className="w-full"
                   />
                   <Input
                     placeholder="Description"
                     value={card.description}
                     onChange={(e) => updateCard(card.id, "description", e.target.value)}
+                    className="w-full"
                   />
                 </div>
               </CardContent>
             </Card>
           ))}
-          <div className="flex space-x-2">
-            <Button onClick={handleAddCard} className="flex-1">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Option
-            </Button>
-            <Button onClick={handleExport} className="flex-grow-0">
-              <Download className="h-4 w-4 mr-2" />
-              Export All Cards
-            </Button>
-            {/* Commented out import button
-            <Button onClick={() => importInputRef.current?.click()} className="flex-grow-0">
-              <Upload className="h-4 w-4 mr-2" />
-              Import
-            </Button>
-            */}
-          </div>
+          <Button onClick={handleAddCard} className="w-full">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Option
+          </Button>
         </div>
         <input
           type="file"
