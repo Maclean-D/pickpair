@@ -7,7 +7,7 @@ import { Card as CardType } from './types'
 import { useMemo, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
-import { Trash2, Download, Upload } from "lucide-react"
+import { Trash2, Download, Upload, RefreshCw } from "lucide-react"
 import { Input } from "@/components/ui/input"
 
 type ResultsTabProps = {
@@ -145,6 +145,12 @@ export function ResultsTab({
     input.click();
   };
 
+  const handleResetResults = () => {
+    if (window.confirm("Are you sure you want to reset all results? This action cannot be undone.")) {
+      resetResults();
+    }
+  };
+
   return (
     <div className="space-y-8">
       <Card>
@@ -252,10 +258,10 @@ export function ResultsTab({
 
       <Card>
         <CardHeader>
-          <CardTitle>Import New User Data</CardTitle>
-          <CardDescription>Import Elo ratings for a new user</CardDescription>
+          <CardTitle>Data Management</CardTitle>
+          <CardDescription>Import new user data or reset all results</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="flex items-center space-x-2">
             <Input
               placeholder="New user name"
@@ -271,24 +277,19 @@ export function ResultsTab({
                 }
               }}
             >
+              <Upload className="h-4 w-4 mr-2" />
               Import User Data
             </Button>
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Reset Results</CardTitle>
-          <CardDescription>Clear all rankings, users, and Elo ratings while keeping the cards</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button 
-            variant="destructive" 
-            onClick={resetResults}
-          >
-            Reset All Results
-          </Button>
+          <div>
+            <Button 
+              variant="destructive" 
+              onClick={handleResetResults}
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Reset All Results
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
