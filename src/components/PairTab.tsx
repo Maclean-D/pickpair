@@ -146,7 +146,7 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
   const progressPercentage = (comparisonIndex / comparisons.length) * 100;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)]"> {/* Adjust for approximate header height */}
+    <div className="flex flex-col h-[calc(100vh-8rem)] relative"> {/* Add relative positioning */}
       <div className="flex flex-col space-y-4 mb-4">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold">
@@ -165,11 +165,14 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
         </div>
         <Progress value={progressPercentage} className="w-full" />
       </div>
-      <div className={`flex-grow flex ${isPortrait ? 'flex-col' : 'flex-row'} gap-4 overflow-hidden`}>
-        {[card1, card2].map((card) => (
+      <div className={`flex-grow flex ${isPortrait ? 'flex-col' : 'flex-row'} gap-4 overflow-hidden perspective-1000 relative z-10`}>
+        {[card1, card2].map((card, index) => (
           <Card 
             key={card.id} 
-            className="cursor-pointer overflow-hidden flex-1 flex flex-col" 
+            className={`cursor-pointer overflow-hidden flex-1 flex flex-col transition-all duration-300 ease-in-out hover:scale-105 z-20 ${
+              index === 0 ? 'hover:-rotate-3' : 'hover:rotate-3'
+            }`}
+            style={{ transformStyle: 'preserve-3d' }}
             onClick={() => handleChoice(card)}
           >
             {card.image && (

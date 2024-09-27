@@ -93,11 +93,22 @@ export function ResultsTab({
 
   const sortedCards = [...cards].sort((a, b) => calculateElo(b.id, selectedUser) - calculateElo(a.id, selectedUser));
 
-  const chartData = sortedCards.map((card, index) => ({
-    title: card.title,
-    elo: Math.round(calculateElo(card.id, selectedUser)),
-    color: interpolateColor(index / (sortedCards.length - 1))
-  }));
+  const chartData = useMemo(() => {
+    const eloScores = sortedCards.map(card => calculateElo(card.id, selectedUser));
+    const minElo = Math.min(...eloScores);
+    const maxElo = Math.max(...eloScores);
+    const eloRange = maxElo - minElo;
+
+    return sortedCards.map(card => {
+      const elo = calculateElo(card.id, selectedUser);
+      const normalizedElo = eloRange !== 0 ? (elo - minElo) / eloRange : 0.5;
+      return {
+        title: card.title,
+        elo: Math.round(elo),
+        color: interpolateColor(1 - normalizedElo) // Change here: use (1 - normalizedElo) instead of normalizedElo
+      };
+    });
+  }, [sortedCards, selectedUser, calculateElo]);
 
   const chartConfig = {
     elo: {
