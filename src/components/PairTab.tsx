@@ -5,7 +5,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card as CardType } from './types'
-import { Play, SkipForward } from "lucide-react"
+import { Play, SkipForward, Undo } from "lucide-react"
 
 type PairTabProps = {
   cards: CardType[]
@@ -22,6 +22,7 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
   const [comparisonIndex, setComparisonIndex] = useState(0)
   const [currentPair, setCurrentPair] = useState<[CardType, CardType] | null>(null)
   const [isPortrait, setIsPortrait] = useState(false)
+  const [comparisonHistory, setComparisonHistory] = useState<[CardType, CardType, CardType | null][]>([]);
 
   const filteredCards = useMemo(() => {
     return cards.filter(card => card.title.toLowerCase() !== name.toLowerCase());
@@ -70,8 +71,10 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
   const handleChoice = (chosenCard: CardType | null) => {
     if (!currentPair) return;
     
+    const [card1, card2] = currentPair;
+    setComparisonHistory(prev => [...prev, [card1, card2, chosenCard]]);
+    
     if (chosenCard) {
-      const [card1, card2] = currentPair;
       const otherCard = chosenCard.id === card1.id ? card2 : card1;
 
       addIndividualPick(name, chosenCard.title || 'Untitled');
@@ -83,6 +86,25 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
     } else {
       setComparisonIndex(prevIndex => prevIndex + 1);
     }
+  };
+
+  const handleUndo = () => {
+    if (comparisonHistory.length === 0) return;
+
+    const lastComparison = comparisonHistory[comparisonHistory.length - 1];
+    const [card1, card2, chosenCard] = lastComparison;
+
+    if (chosenCard) {
+      const otherCard = chosenCard.id === card1.id ? card2 : card1;
+      // Reverse the Elo update
+      updateElo(otherCard.id, chosenCard.id);
+      // Remove the individual pick
+      addIndividualPick(name, '');  // Assuming empty string removes the last pick
+    }
+
+    setComparisonIndex(prevIndex => prevIndex - 1);
+    setComparisonHistory(prev => prev.slice(0, -1));
+    setCurrentPair([card1, card2]);
   };
 
   const handleNameSubmit = (e: React.FormEvent) => {
@@ -126,10 +148,16 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
         <h2 className="text-2xl font-bold">
           Pick Your Preference {name} ({comparisonIndex + 1}/{comparisons.length})
         </h2>
-        <Button variant="outline" onClick={() => handleChoice(null)}>
-          <SkipForward className="h-4 w-4 mr-2" />
-          Skip
-        </Button>
+        <div className="flex space-x-2">
+          <Button variant="outline" onClick={handleUndo} disabled={comparisonHistory.length === 0}>
+            <Undo className="h-4 w-4 mr-2" />
+            Undo
+          </Button>
+          <Button variant="outline" onClick={() => handleChoice(null)}>
+            <SkipForward className="h-4 w-4 mr-2" />
+            Skip
+          </Button>
+        </div>
       </div>
       <div className={`flex-grow flex ${isPortrait ? 'flex-col' : 'flex-row'} gap-4 overflow-hidden`}>
         {[card1, card2].map((card) => (
