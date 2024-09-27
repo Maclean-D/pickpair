@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card as CardType } from './types'
 import { Play, SkipForward, Undo } from "lucide-react"
+import { Progress } from "@/components/ui/progress"
 
 type PairTabProps = {
   cards: CardType[]
@@ -142,22 +143,27 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
 
   const [card1, card2] = currentPair;
 
+  const progressPercentage = (comparisonIndex / comparisons.length) * 100;
+
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]"> {/* Adjust for approximate header height */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">
-          Pick Your Preference {name} ({comparisonIndex + 1}/{comparisons.length})
-        </h2>
-        <div className="flex space-x-2">
-          <Button variant="outline" onClick={handleUndo} disabled={comparisonHistory.length === 0}>
-            <Undo className="h-4 w-4 mr-2" />
-            Undo
-          </Button>
-          <Button variant="outline" onClick={() => handleChoice(null)}>
-            <SkipForward className="h-4 w-4 mr-2" />
-            Skip
-          </Button>
+      <div className="flex flex-col space-y-4 mb-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">
+            Pick Your Preference, {name}
+          </h2>
+          <div className="flex space-x-2">
+            <Button variant="outline" onClick={handleUndo} disabled={comparisonHistory.length === 0}>
+              <Undo className="h-4 w-4 mr-2" />
+              Undo
+            </Button>
+            <Button variant="outline" onClick={() => handleChoice(null)}>
+              <SkipForward className="h-4 w-4 mr-2" />
+              Skip
+            </Button>
+          </div>
         </div>
+        <Progress value={progressPercentage} className="w-full" />
       </div>
       <div className={`flex-grow flex ${isPortrait ? 'flex-col' : 'flex-row'} gap-4 overflow-hidden`}>
         {[card1, card2].map((card) => (
