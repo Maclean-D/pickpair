@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis, Cell } from "recharts"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Card as CardType } from './types'
 import { useMemo, useState } from 'react'
@@ -17,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { interpolateColor } from '@/lib/utils' // We'll create this function
 
 type ResultsTabProps = {
   cards: CardType[]
@@ -92,15 +93,15 @@ export function ResultsTab({
 
   const sortedCards = [...cards].sort((a, b) => calculateElo(b.id, selectedUser) - calculateElo(a.id, selectedUser));
 
-  const chartData = sortedCards.map(card => ({
+  const chartData = sortedCards.map((card, index) => ({
     title: card.title,
-    elo: Math.round(calculateElo(card.id, selectedUser))
+    elo: Math.round(calculateElo(card.id, selectedUser)),
+    color: interpolateColor(index / (sortedCards.length - 1))
   }));
 
   const chartConfig = {
     elo: {
       label: "Average Elo Rating",
-      color: "hsl(var(--primary))",
     },
     label: {
       color: "hsl(var(--background))",
@@ -228,9 +229,11 @@ export function ResultsTab({
               />
               <Bar
                 dataKey="elo"
-                fill="var(--primary)"
                 radius={4}
               >
+                {chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
                 <LabelList
                   dataKey="elo"
                   position="right"
