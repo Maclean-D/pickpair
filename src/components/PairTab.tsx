@@ -29,30 +29,44 @@ export function PairTab({ cards, updateElo, setActiveTab, addIndividualPick, set
     return cards.filter(card => card.title.toLowerCase() !== name.toLowerCase());
   }, [cards, name]);
 
-  // Calculate the number of comparisons based on the number of cards
   const calculateComparisons = (cardCount: number) => {
-    return cardCount * 3; // 3 times the number of cards
+    // Adjust this number to control how many comparisons each user makes
+    const comparisonsPerCard = 5; // This means each card will appear 5 times
+    return cardCount * comparisonsPerCard / 2;
   };
 
   useEffect(() => {
     if (!nameSubmitted) return;
 
     const totalComparisons = calculateComparisons(filteredCards.length);
-    const allPairs: [CardType, CardType][] = [];
+    let allPairs: [CardType, CardType][] = [];
     
+    // Generate all possible pairs
     for (let i = 0; i < filteredCards.length; i++) {
       for (let j = i + 1; j < filteredCards.length; j++) {
         allPairs.push([filteredCards[i], filteredCards[j]]);
       }
     }
 
-    // Repeat and shuffle to get desired number of comparisons
-    const repeatedPairs = Array(Math.ceil(totalComparisons / allPairs.length))
-      .fill(allPairs)
-      .flat()
-      .slice(0, totalComparisons);
+    // Shuffle all pairs
+    allPairs = shuffleArray(allPairs);
 
-    setComparisons(shuffleArray(repeatedPairs));
+    // Select pairs ensuring each card appears an equal number of times
+    const selectedPairs: [CardType, CardType][] = [];
+    const cardAppearances: Record<string, number> = {};
+    filteredCards.forEach(card => cardAppearances[card.id] = 0);
+
+    while (selectedPairs.length < totalComparisons && allPairs.length > 0) {
+      const pair = allPairs.pop()!;
+      const [card1, card2] = pair;
+      if (cardAppearances[card1.id] < 5 && cardAppearances[card2.id] < 5) {
+        selectedPairs.push(pair);
+        cardAppearances[card1.id]++;
+        cardAppearances[card2.id]++;
+      }
+    }
+
+    setComparisons(selectedPairs);
     setComparisonIndex(0);
 
     const checkOrientation = () => setIsPortrait(window.innerHeight > window.innerWidth);
