@@ -76,7 +76,3 @@ PickPair is a web application that allows users to compare options in pairs, gen
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
