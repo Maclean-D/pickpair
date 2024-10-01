@@ -5,7 +5,7 @@ PickPair is a web application that allows users to compare options in pairs, gen
 ## Features
 
 ### Options
-![pick](https://github.com/Maclean-D/pickpair/raw/main/pick.png)
+![pick](https://github.com/Maclean-D/pickpair/raw/main/pickpair.png)
 
 - Add, edit, and remove options
 - Upload images for each option
