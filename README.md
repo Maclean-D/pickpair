@@ -5,19 +5,6 @@
 ### Options
 ![pick](https://github.com/Maclean-D/pickpair/raw/main/pick.png)
 
-- Title
-- Description
-- Image
-
-### Pair
-- Record Name
-- Pick between two options at a time
-- Every option will appear 5 times
-- Scoring is based on Elo rating system
-
-### Results
-- Bar graph of Elo ratings (Average & individual available)
-- Import/Export individual data
 
 ## How to Run
 
