@@ -73,9 +73,9 @@ Web application that allows users to compare options in pairs, generating Elo ra
 - Tailwind CSS
 - Shadcn/ui
 
-## Contributing
+## Star History
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+[![Star History Chart](https://api.star-history.com/svg?repos=Maclean-D/pickpair&type=Date)](https://star-history.com/#Maclean-D/pickpair&Date)
 
 ## Contributors
 
