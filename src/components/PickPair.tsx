@@ -12,7 +12,7 @@ const K_FACTOR = 32;
 
 export default function PickPair() {
   const [cards, setCards] = useState<Card[]>([])
-  const [activeTab, setActiveTab] = useState("pick")
+  const [activeTab, setActiveTab] = useState("options")  // Changed from "pick" to "options"
   const [individualPicks, setIndividualPicks] = useState<Record<string, string[]>>({})
   const [eloHistory, setEloHistory] = useState<Record<string, Record<string, number[]>>>({})
   const [currentUser, setCurrentUser] = useState<string | null>(null)
@@ -100,8 +100,8 @@ export default function PickPair() {
     });
     setEloHistory(resetHistory);
 
-    // Switch back to the "pick" tab
-    setActiveTab("pick");
+    // Switch back to the "options" tab
+    setActiveTab("options");  // Changed from "pick" to "options"
   }
 
   const deleteUser = (userName: string) => {
@@ -132,9 +132,9 @@ export default function PickPair() {
     <div className="w-full p-4">
       <div className="flex space-x-2 mb-4">
         {[
-          { name: "pick", icon: <List className="h-4 w-4 mr-2" /> },
-          { name: "pair", icon: <Users className="h-4 w-4 mr-2" /> },
-          { name: "results", icon: <BarChart2 className="h-4 w-4 mr-2" /> }
+          { name: "options", icon: <List className="h-4 w-4 mr-2" />, label: "Options" },
+          { name: "vote", icon: <Users className="h-4 w-4 mr-2" />, label: "Vote" },
+          { name: "results", icon: <BarChart2 className="h-4 w-4 mr-2" />, label: "Results" }
         ].map((tab) => (
           <Button
             key={tab.name}
@@ -143,12 +143,12 @@ export default function PickPair() {
             onClick={() => setActiveTab(tab.name)}
           >
             {tab.icon}
-            {tab.name.charAt(0).toUpperCase() + tab.name.slice(1)}
+            {tab.label}
           </Button>
         ))}
       </div>
-      {activeTab === "pick" && <PickTab cards={cards} addCard={addCard} updateCard={updateCard} removeCard={removeCard} />}
-      {activeTab === "pair" && <PairTab cards={cards} updateElo={updateElo} setActiveTab={setActiveTab} addIndividualPick={addIndividualPick} setCurrentUser={setCurrentUser} />}
+      {activeTab === "options" && <PickTab cards={cards} addCard={addCard} updateCard={updateCard} removeCard={removeCard} />}
+      {activeTab === "vote" && <PairTab cards={cards} updateElo={updateElo} setActiveTab={setActiveTab} addIndividualPick={addIndividualPick} setCurrentUser={setCurrentUser} />}
       {activeTab === "results" && (
         <ResultsTab 
           cards={cards} 

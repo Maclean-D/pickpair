@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis, Cell } from "recharts"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Card as CardType } from './types'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Trash2, Download, Upload, RefreshCw } from "lucide-react"
@@ -46,20 +46,20 @@ export function ResultsTab({
     return Math.max(400, Math.round(1000 / Math.sqrt(cards.length || 1)));
   }, [cards.length]);
 
-  const calculateAverageElo = (cardId: string) => {
+  const calculateAverageElo = useCallback((cardId: string) => {
     const userElos = Object.values(eloHistory[cardId]);
-    if (userElos.length === 0) return initialElo; // Use initialElo instead of hardcoded 400
+    if (userElos.length === 0) return initialElo;
     const sum = userElos.reduce((acc, elos) => acc + (elos.at(-1) ?? initialElo), 0);
     return sum / userElos.length;
-  };
+  }, [eloHistory, initialElo]);
 
-  const calculateElo = (cardId: string, user: string) => {
+  const calculateElo = useCallback((cardId: string, user: string) => {
     if (user === "average") {
       return calculateAverageElo(cardId);
     }
     const userElos = eloHistory[cardId][user];
     return userElos?.at(-1) ?? initialElo;
-  };
+  }, [eloHistory, initialElo, calculateAverageElo]);
 
   const getHighestEloItem = (userName: string): string => {
     let highestElo = -Infinity;
@@ -260,8 +260,8 @@ export function ResultsTab({
 
       <Card>
         <CardHeader>
-          <CardTitle>User's Picks</CardTitle>
-          <CardDescription>Each user's highest and lowest rated items based on Elo</CardDescription>
+          <CardTitle>User&apos;s Picks</CardTitle>
+          <CardDescription>Each user&apos;s highest and lowest rated items based on Elo</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>

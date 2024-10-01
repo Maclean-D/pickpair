@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card as CardType } from './types'
-import { ImagePlus, X, Download, Upload, Plus } from "lucide-react"
+import { ImagePlus, X, Download, Plus } from "lucide-react"
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 
