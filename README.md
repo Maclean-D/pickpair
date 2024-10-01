@@ -76,3 +76,9 @@ Web application that allows users to compare options in pairs, generating Elo ra
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Contributors
+
+<a href="https://github.com/Maclean-D/pickpair/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Maclean-D/pickpair" />
+</a>
