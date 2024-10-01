@@ -1,12 +1,12 @@
 # PickPair
 
+![pick](https://github.com/Maclean-D/pickpair/raw/main/pickpair.png)
+
 Web application that allows users to compare options in pairs, generating Elo ratings for each option.
 
 ## Features
 
 ### Options
-![pick](https://github.com/Maclean-D/pickpair/raw/main/pickpair.png)
-
 - Add, edit, and remove options
 - Upload images for each option
 - Export options as a ZIP file
