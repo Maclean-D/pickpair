@@ -1,6 +1,6 @@
 # PickPair
 
-![pick](https://github.com/Maclean-D/pickpair/raw/main/pickpair.png)
+![pickpair](https://github.com/Maclean-D/pickpair/raw/main/pickpair.png)
 
 Web application that allows users to compare options in pairs, generating Elo ratings for each option.
 
