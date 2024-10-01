@@ -71,7 +71,7 @@ Web application that allows users to compare options in pairs, generating Elo ra
 - React
 - TypeScript
 - Tailwind CSS
-- Shadcn
+- Shadcn/ui
 
 ## Contributing
 
