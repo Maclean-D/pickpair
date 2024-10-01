@@ -1,6 +1,6 @@
 # PickPair
 
-PickPair is a web application that allows users to compare options in pairs, generating Elo ratings for each option based on user preferences.
+Web application that allows users to compare options in pairs, generating Elo ratings for each option.
 
 ## Features
 
