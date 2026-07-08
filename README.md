@@ -75,7 +75,13 @@ Web application that allows users to compare options in pairs, generating Elo ra
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Maclean-D/pickpair&type=Date)](https://star-history.com/#Maclean-D/pickpair&Date)
+<a href="https://www.star-history.com/?repos=Maclean-D%2Fpickpair&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Maclean-D/pickpair&type=date&theme=dark&legend=top-left&sealed_token=M7_aFC81WbvU_MVJB1TyMmiXs3noLqHdhUDOLFy-rClVaFxWRXcyLdLKLxUofXfGZ9AEfMAj5UZUGT6qq8pl6WkjP_PteMUz83o87cQLtOLl9h2R-Gt9SJcUw_hSQYBKuhuJOC6Q_InQHeyOx98-SSD4XcUnlp3QNRoPvZn1iEt-H88Xq7-MeXzwF6-Z" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Maclean-D/pickpair&type=date&legend=top-left&sealed_token=M7_aFC81WbvU_MVJB1TyMmiXs3noLqHdhUDOLFy-rClVaFxWRXcyLdLKLxUofXfGZ9AEfMAj5UZUGT6qq8pl6WkjP_PteMUz83o87cQLtOLl9h2R-Gt9SJcUw_hSQYBKuhuJOC6Q_InQHeyOx98-SSD4XcUnlp3QNRoPvZn1iEt-H88Xq7-MeXzwF6-Z" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Maclean-D/pickpair&type=date&legend=top-left&sealed_token=M7_aFC81WbvU_MVJB1TyMmiXs3noLqHdhUDOLFy-rClVaFxWRXcyLdLKLxUofXfGZ9AEfMAj5UZUGT6qq8pl6WkjP_PteMUz83o87cQLtOLl9h2R-Gt9SJcUw_hSQYBKuhuJOC6Q_InQHeyOx98-SSD4XcUnlp3QNRoPvZn1iEt-H88Xq7-MeXzwF6-Z" />
+ </picture>
+</a>
 
 ## Contributors
 
