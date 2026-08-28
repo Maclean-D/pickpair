@@ -31,7 +31,8 @@
     "react-dom": "*",
     "recharts": "*",
     "tailwind-merge": "*",
-    "tailwindcss-animate": "*"
+    "tailwindcss-animate": "*",
+    "uuid": "*"
   },
   "devDependencies": {
     "@types/file-saver": "*",
@@ -43,5 +44,8 @@
     "postcss": "*",
     "tailwindcss": "*",
     "typescript": "*"
+  },
+  "overrides": {
+    "uuid": "$uuid"
   }
 }
