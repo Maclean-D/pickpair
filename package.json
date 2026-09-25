@@ -35,6 +35,7 @@
     "uuid": "*"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "*",
     "@types/file-saver": "*",
     "@types/node": "*",
     "@types/react": "*",
