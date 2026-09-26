@@ -26,7 +26,7 @@
     "file-saver": "*",
     "jszip": "*",
     "lucide-react": "*",
-    "next": "*",
+    "next": "latest",
     "react": "*",
     "react-dom": "*",
     "recharts": "*",
@@ -35,12 +35,13 @@
     "uuid": "*"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "*",
     "@types/file-saver": "*",
     "@types/node": "*",
     "@types/react": "*",
     "@types/react-dom": "*",
     "eslint": "*",
-    "eslint-config-next": "*",
+    "eslint-config-next": "latest",
     "postcss": "*",
     "tailwindcss": "*",
     "typescript": "*"
